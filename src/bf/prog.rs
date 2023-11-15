@@ -31,11 +31,10 @@ impl Program {
 
     /// decreases the cursor by one
     pub fn debase(&mut self) {
-        /*
-        if self.cursor == 0 {
+        if self.cursor == 0{
             return;
         }
-        */
+
         self.cursor -= 1;
     }
 
@@ -90,7 +89,8 @@ impl Program {
                         seen -= 1;
                     }
                 },
-                _ => {}
+                _ => {
+                }
             }
             count += 1;
         }
@@ -107,7 +107,7 @@ impl Program {
             collect::<Vec<char>>()[0..current];
 
         let mut seen = 0;
-        let mut len = chars.len();
+        let mut len = chars.len() - 1;
         let mut count = 0;
         loop {
             let ch = chars[len];
@@ -122,7 +122,8 @@ impl Program {
                 ']' => {
                     seen += 1;
                 },
-                _ => {},
+                _ => {
+                },
             }
             len -= 1;
             count += 1;
@@ -156,7 +157,7 @@ impl Program {
                                     return Err(e);
                                 }
                             }
-                            self.debase();
+                            self.advance();
                         },
                         '+' => {
                             match self.cell.inc() {
@@ -183,11 +184,16 @@ impl Program {
                             std::io::stdin().read_line(&mut input).unwrap();
                             if input.is_empty() {
                                 self.cell.set(0);
+                            } else{
+                                let i = input.bytes().collect::<Vec<u8>>()[0];
+                                self.cell.set(i as i64);
                             }
+
+                            self.advance();
                         },
                         // + [[]]
                         '[' => {
-                            if self.cell.data() == 0{
+                            if self.cell.data() == 0 {
                                 self.jump_to();
                             } else{
                                 self.advance();
@@ -203,7 +209,7 @@ impl Program {
                             }
                         },
                         _ => {
-                            continue;
+                            self.advance();
                         },
                     };
                 },
@@ -254,5 +260,36 @@ mod tests{
         assert_eq!(program.cursor(), 5);
         assert_eq!(program.cell.ptr(), 0);
         assert_eq!(program.cell.cells()[0], -5);
+    }
+
+    #[test]
+    fn test_memory_ptr_n(){
+        let data = String::from(">>>>>");
+        let mut program = crate::bf::prog::Program::new(data);
+        program.execute().ok();
+        assert_eq!(program.cursor, 5);
+        assert_eq!(program.cell.cells()[0], 0);
+        assert_eq!(program.cell.ptr(), 5);
+    }
+
+    #[test]
+    fn test_memory_ptr_p(){
+        let data = String::from(">>>>><<<<<");
+        let mut program = crate::bf::prog::Program::new(data);
+        program.execute().ok();
+        assert_eq!(program.cursor, 10);
+        assert_eq!(program.cell.cells()[0], 0);
+        assert_eq!(program.cell.ptr(), 0);
+    }
+
+    #[test]
+    fn test_loop(){
+        let data = String::from("+++++[>+++++<-]>");
+        let len = data.len();
+        let mut program = crate::bf::prog::Program::new(data);
+        program.execute().ok();
+        assert_eq!(program.cursor, len);
+        assert_eq!(program.cell.cells()[0], 0);
+        assert_eq!(program.cell.cells()[1], 25);
     }
 }

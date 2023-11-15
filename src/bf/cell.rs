@@ -107,9 +107,12 @@ impl Cell {
     ///    |
     ///   *ptr
     pub fn previous(&mut self) -> CellResult{
+        /*
         if self.ptr == 0{
             return Err(Error("no more previous memory".to_string()));
         }
+
+        */
         self.ptr -= 1usize;
         Ok(())
     }
