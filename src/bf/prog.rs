@@ -1,6 +1,8 @@
 use crate::bf::Error;
 use crate::bf::cell::Cell;
 
+use crate::bf::AppResult;
+
 pub struct Program {
     cell: Cell,
     input: String,
@@ -36,6 +38,10 @@ impl Program {
         }
 
         self.cursor -= 1;
+    }
+
+    pub fn core_dump(&self) -> &Box<[i64]>{
+        self.cell.cells()
     }
 
     /// validation function for the input of brainf*ck program.
@@ -129,13 +135,12 @@ impl Program {
             count += 1;
         }
         self.cursor = current - count;
-        // continue up with the vector to count down... yep
     }
 
     /// Main execution begins here.
     /// Once the program input is loaded it
     /// starts execting here.
-    pub fn execute(&mut self) -> Result<(), Error>{
+    pub fn execute(&mut self) -> AppResult {
         self.validate()?;
         while self.cursor() <= self.input.len() - 1 {
             match self.input.chars().nth(self.cursor()){
@@ -191,7 +196,7 @@ impl Program {
 
                             self.advance();
                         },
-                        // + [[]]
+
                         '[' => {
                             if self.cell.data() == 0 {
                                 self.jump_to();

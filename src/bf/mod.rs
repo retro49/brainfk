@@ -14,6 +14,8 @@ impl std::fmt::Display for crate::bf::Error{
     }
 }
 
+pub type AppResult = Result<(), self::Error>;
+
 impl std::error::Error for crate::bf::Error{
     fn description(&self) -> &str {
         &self.0
