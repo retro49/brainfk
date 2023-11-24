@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["show_full_help","show_review_help"]};

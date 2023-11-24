@@ -1,1 +1,0 @@
-window.ALL_CRATES = ["anstream","anstyle","anstyle_parse","anstyle_query","brainfk","clap","clap_builder","clap_lex","colorchoice","strsim","utf8parse"];

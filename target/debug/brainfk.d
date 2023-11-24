@@ -1,1 +1,0 @@
-/home/retro/fnpro/brainfk/target/debug/brainfk: /home/retro/fnpro/brainfk/src/bf/cell.rs /home/retro/fnpro/brainfk/src/bf/mod.rs /home/retro/fnpro/brainfk/src/bf/prog.rs /home/retro/fnpro/brainfk/src/lib.rs /home/retro/fnpro/brainfk/src/main.rs

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["bf","bf_help","bf_runner"]};
