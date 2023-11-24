@@ -1,7 +1,8 @@
 extern crate brainfk;
 use brainfk::bf::prog::Program;
 use brainfk::bf::AppResult;
-use brainfk::bf_help;
+use brainfk::bf_runner::Base;
+use brainfk::bf_runner::Runner;
 
 use clap::Arg;
 
@@ -46,13 +47,13 @@ fn main() -> AppResult {
                 .help("core dump file")
         )
         .arg(
-            Arg::new("format")
-                .short('f')
-                .long("format")
+            Arg::new("base")
+                .short('b')
+                .long("base")
                 .help("byte format style for the core dump")
                 .required(false)
                 .value_parser(clap::value_parser!(u8))
-                .default_value("8")
+                .default_value("10")
         )
         .arg(
             Arg::new("file")
@@ -60,24 +61,27 @@ fn main() -> AppResult {
                 .last(true)
                 .help("input file")
         )
-        .arg(
-            Arg::new("help")
-                .long("help")
-                .short('h')
-                .help(bf_help::show_full_help())
-        )
         .get_matches();
-    
-    /*
-    let input = r#"
-    >++++++++[<+++++++++>-]<.>++++[<+++++++>-]
-    <+.+++++++..+++.>>++++++[<+++++++>-]<+
-    +.------------.>++++++[<+++++++++>-]<+.
-    <.+++.------.--------.>>>++++[<++++++++>-]<+.
-    "#.to_string();
-    let mut program = Program::new("+++++[>++++++++++<-]>+++++++++++++++.".to_string());
-    //let mut program = Program::new(input);
-    program.execute().unwrap();
-    */
+
+    let file = match cmd.get_one::<String>("file"){
+        Some(f) => {f},
+        None => panic!("no input file provided to run"),
+    };
+
+    let core = cmd.get_one::<String>("core");
+    let base = cmd.get_one::<u8>("base");
+    if core != None {
+        let core = core.unwrap();
+        let base: Base = (*base.unwrap()).into();
+        let mut runner = crate::brainfk::bf_runner::Runner::new(
+            Some(base),
+            Some(core.to_string()),
+            file,
+        );
+        runner.execute()?;
+    } else {
+        Runner::new(None, None, file).execute()?;
+    }
+
     Ok(())
 }

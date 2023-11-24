@@ -181,7 +181,7 @@ impl Program {
                         },
                         '.' => {
                             let c: char = (self.cell.data() as u8).into();
-                            println!("{}", c);
+                            print!("{}", c);
                             self.advance();
                         },
                         ',' => {
